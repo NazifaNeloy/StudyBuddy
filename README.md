@@ -14,12 +14,15 @@ StudyBuddy is a collaborative learning platform designed to bridge the gap betwe
 Developed for the university web development curriculum, StudyBuddy addresses student productivity by offering a centralized hub for group study. The platform emphasizes **real-time synchronization** and **relational data integrity**, ensuring a seamless collaborative experience.
 
 ## ✨ Core Features
-* **👥 Study Groups:** Create and join course-specific groups with ease.
-* **💬 Real-Time Messaging:** Instant group chat for seamless collaboration.
-* **⏱ Shared Pomodoro Timers:** Synchronized focus sessions to keep the whole group on track.
-* **🏆 Gamification:** Earn points for activity and climb the global **Leaderboard**.
-* **📂 Resource Sharing:** Share and categorize study materials, links, and PDFs.
-* **🔔 Live Notifications:** Stay updated on group requests and scheduled sessions.
+*  Study Groups:** Create and join course-specific groups with ease.
+* Real-Time Messaging:** Instant group chat for seamless collaboration.
+* User Profiles: Customize profiles with bios and personal information
+* Shared Pomodoro Timers:** Synchronized focus sessions to keep the whole group on track.
+* Gamification:** Earn points for activity and climb the global **Leaderboard**.
+*  Resource Sharing:** Share and categorize study materials, links, and PDFs.
+* Live Notifications:** Stay updated on group requests and scheduled sessions.
+* Privacy Settings: Control your profile visibility and group access
+* Join Requests: Manage group membership requests
 
 ## 🛠 Tech Stack
 
