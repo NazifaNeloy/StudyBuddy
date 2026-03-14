@@ -3,19 +3,20 @@ import {
   UserPlus, 
   Users, 
   Timer, 
-  Trophy, 
+  Trophy,
+  ArrowRight,
   Sparkles,
   Star,
-  ArrowRight
+  CheckCircle2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function HowItWorks() {
   const navigate = useNavigate();
 
-  const container = {
+  const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
+    visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.15
@@ -23,160 +24,161 @@ function HowItWorks() {
     }
   };
 
-  const item = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
   };
 
+  const steps = [
+    {
+      title: "Smart Onboarding",
+      desc: "Tell us about your courses, skills, and learning goals through our signature skill survey. We help you set the right targets from day one.",
+      icon: UserPlus,
+      color: "bg-blue-50 text-blue-600",
+      gridClass: "lg:col-span-1 lg:row-span-1"
+    },
+    {
+      title: "Buddy Matching",
+      desc: "Our active matching algorithm pairs you with students who share your intensity. Join squads that match your vibe and course schedule perfectly.",
+      icon: Users,
+      color: "bg-emerald-50 text-emerald-600",
+      gridClass: "lg:col-span-1 lg:row-span-2"
+    },
+    {
+      title: "Real-Time Rooms",
+      desc: "Enter live collaborative rooms featuring low-latency chat, shared file hubs, and synchronized Pomodoro timers for maximum focus.",
+      icon: Timer,
+      color: "bg-purple-50 text-purple-600",
+      gridClass: "lg:col-span-1 lg:row-span-1"
+    },
+    {
+      title: "Earn Rewards",
+      desc: "Climb the global leaderboard as you study. Earn points for every hour of deep focus and unlock rank badges that show off your dedication.",
+      icon: Trophy,
+      color: "bg-orange-50 text-orange-600",
+      gridClass: "lg:col-span-1 lg:row-span-2"
+    }
+  ];
+
   return (
-    <div className="bg-white dark:bg-slate-950 min-h-screen pt-20 transition-colors relative overflow-hidden">
+    <div className="relative bg-[#F9F9F9] dark:bg-slate-950 min-h-screen pt-24 pb-32 transition-colors overflow-hidden">
       
-      {/* Background Decor */}
-      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-yellow-100/50 dark:bg-yellow-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-indigo-50/50 dark:bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+      {/* Background Blobs for Depth */}
+      <div className="absolute top-[10%] left-[-10%] w-[40rem] h-[40rem] bg-yellow-100/40 dark:bg-yellow-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[-5%] w-[35rem] h-[35rem] bg-indigo-100/40 dark:bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         
-        {/* Section Header */}
-        <div className="max-w-2xl mb-20">
-            <motion.h1 
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="text-5xl md:text-6xl font-black text-slate-900 dark:text-white leading-tight mb-6"
-            >
-                How To Ace Your Finals With <span className="text-indigo-600">StudyBuddy</span>
-            </motion.h1>
-            <motion.p 
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed"
-            >
-                Stop the grind, start the flow. We've built a structured path to collaborative excellence.
-            </motion.p>
-        </div>
-
-        {/* Bento Grid */}
+        {/* Hero Section Card */}
         <motion.div 
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 h-auto md:h-[700px]"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-4xl mx-auto mb-20 p-12 lg:p-20 rounded-[3rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 shadow-sm relative overflow-hidden group"
         >
-            {/* HERO CARD (Step 0) - Spans 2 cols, 2 rows */}
-            <motion.div 
-                variants={item}
-                className="md:col-span-2 md:row-span-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2.5rem] p-12 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group flex flex-col justify-between relative overflow-hidden"
-            >
-                <div className="relative z-10">
-                    <div className="w-20 h-20 rounded-full bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
-                        <Star className="w-10 h-10 text-indigo-600 fill-indigo-600/10" />
-                    </div>
-                    <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-6">Built for high-energy <br/> collaboration.</h2>
-                    <p className="text-lg text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-sm">
-                        StudyBuddy isn't just a chat app. It's a synchronized engine designed to keep your focus locked and your motivation high.
-                    </p>
-                </div>
+          {/* Sparkle Decoration */}
+          <motion.div 
+            animate={{ rotate: 360, scale: [1, 1.2, 1] }} 
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute top-8 right-12 text-yellow-400 opacity-60 hidden md:block"
+          >
+            <Sparkles className="w-8 h-8" />
+          </motion.div>
+          <motion.div 
+            animate={{ y: [0, -10, 0] }} 
+            transition={{ duration: 3, repeat: Infinity }}
+            className="absolute bottom-12 left-12 text-indigo-300 opacity-60 hidden md:block"
+          >
+            <Star className="w-6 h-6 fill-current" />
+          </motion.div>
 
-                <div className="relative z-10 pt-10">
-                    <button 
-                         onClick={() => navigate("/auth")}
-                         className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-black group/btn"
-                    >
-                        Learn More About The Engine
-                        <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
-                </div>
-
-                {/* Decoration */}
-                <Sparkles className="absolute bottom-10 right-10 w-24 h-24 text-indigo-100 dark:text-indigo-900 opacity-20" />
-            </motion.div>
-
-            {/* STEP 1: Smart Onboarding */}
-            <motion.div 
-                variants={item}
-                className="md:col-span-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group"
-            >
-                <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <UserPlus className="w-7 h-7 text-emerald-600" />
-                </div>
-                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Smart Onboarding</h3>
-                <p className="text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed">
-                    Take a quick survey so we can match you with the right peers.
-                </p>
-            </motion.div>
-
-            {/* STEP 2: Buddy Matching */}
-            <motion.div 
-                variants={item}
-                className="md:col-span-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group"
-            >
-                <div className="w-14 h-14 rounded-full bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Users className="w-7 h-7 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Buddy Matching</h3>
-                <p className="text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed">
-                    Our algorithm finds students with the same course goals.
-                </p>
-            </motion.div>
-
-            {/* STEP 3: Real-Time Rooms */}
-            <motion.div 
-                variants={item}
-                className="md:col-span-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group"
-            >
-                <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Timer className="w-7 h-7 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Real-Time Rooms</h3>
-                <p className="text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed">
-                    Jump into rooms with live chat and shared timers.
-                </p>
-            </motion.div>
-
-            {/* STEP 4: Earn Rewards */}
-            <motion.div 
-                variants={item}
-                className="md:col-span-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all group"
-            >
-                <div className="w-14 h-14 rounded-full bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Trophy className="w-7 h-7 text-orange-600" />
-                </div>
-                <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Earn Rewards</h3>
-                <p className="text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed">
-                    Rack up points for focus hours and climb the global ranks.
-                </p>
-            </motion.div>
-        </motion.div>
-
-        {/* CTA */}
-        <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-20 flex justify-center"
-        >
+          <h1 className="text-5xl lg:text-7xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6">
+            Everything you need to <br />
+            <span className="text-indigo-600">study smarter.</span>
+          </h1>
+          <p className="text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
+            Stop studying in isolation. Connect with course mates in real-time rooms, sync your timers, and turn deep work into a team sport.
+          </p>
+          <div className="flex justify-center">
             <button 
               onClick={() => navigate("/auth")}
-              className="px-12 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black text-xl rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all"
+              className="px-12 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-black text-xl shadow-2xl shadow-indigo-500/30 transition-all hover:scale-[1.05] active:scale-[0.98] flex items-center gap-3"
             >
-                Start Your First Session
+              Start Inspired
+              <ArrowRight className="w-6 h-6" />
             </button>
+          </div>
+        </motion.div>
+
+        {/* Bento Grid Section */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {steps.map((s, idx) => (
+            <motion.div
+              key={s.title}
+              variants={itemVariants}
+              whileHover={{ y: -10 }}
+              className={`p-10 rounded-[2.5rem] bg-white dark:bg-slate-900 border border-slate-100 dark:border-white/5 flex flex-col items-center text-center shadow-sm group transition-all duration-300 ${s.gridClass}`}
+            >
+              <div className={`w-20 h-20 rounded-full ${s.color} flex items-center justify-center mb-8 relative mb-8 group-hover:scale-110 transition-transform duration-500`}>
+                <s.icon className="w-10 h-10" />
+                {/* Accent Sparkle */}
+                {idx % 2 === 0 && (
+                  <div className="absolute -top-1 -right-1 text-yellow-500">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                )}
+              </div>
+              
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">{s.title}</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium leading-[1.8] text-base">
+                {s.desc}
+              </p>
+
+              {/* Step indicator tag at the bottom */}
+              <div className="mt-8 px-4 py-1.5 rounded-full bg-slate-50 dark:bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-indigo-500 transition-colors">
+                Step {idx + 1}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Closing CTA Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-24 text-center"
+        >
+          <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold mb-8">
+            <CheckCircle2 className="w-5 h-5" />
+            <span>Academic Excellence Guaranteed</span>
+          </div>
+          <h2 className="text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-6 tracking-tight">
+            Level up your design class today.
+          </h2>
+          <button 
+            onClick={() => navigate("/auth")}
+            className="group flex items-center gap-3 mx-auto px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-black text-lg transition-all hover:bg-indigo-600 dark:hover:bg-indigo-500 dark:hover:text-white"
+          >
+            Join StudyBuddy 
+            <motion.span whileHover={{ x: 5 }} className="transition-transform">
+              <ArrowRight className="w-5 h-5" />
+            </motion.span>
+          </button>
         </motion.div>
       </div>
-
-      {/* Minimal Footer */}
-      <footer className="max-w-7xl mx-auto px-6 py-12 flex justify-between items-center border-t border-slate-100 dark:border-white/5">
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">© 2026 STUDYBUDDY</span>
-        <div className="flex gap-6">
-            <Sparkles className="w-4 h-4 text-slate-300" />
-            <Sparkles className="w-4 h-4 text-slate-300" />
-            <Sparkles className="w-4 h-4 text-slate-300" />
-        </div>
-      </footer>
     </div>
   );
 }
