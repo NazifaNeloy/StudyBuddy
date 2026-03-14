@@ -76,4 +76,20 @@ router.put('/:id/notifications/:notifId/read', authMiddleware, async (req, res) 
     }
 });
 
+// @route   GET /users/:id/dashboard
+// @desc    Get aggregated stats for the user dashboard
+router.get('/:id/dashboard', authMiddleware, async (req, res, next) => {
+    try {
+        if (req.user.id !== parseInt(req.params.id)) {
+            return res.status(403).json({ message: 'Unauthorized access' });
+        }
+        
+        const dashboardData = await User.getDashboardStats(req.user.id);
+        res.json(dashboardData);
+    } catch (err) {
+        console.error(err);
+        next(err); // Pass to global error handler
+    }
+});
+
 module.exports = router;

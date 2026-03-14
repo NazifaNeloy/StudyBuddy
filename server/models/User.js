@@ -155,6 +155,70 @@ const User = {
         `;
         const { rows } = await db.query(query, [notificationId, userId]);
         return rows[0];
+    },
+
+    getDashboardStats: async (userId) => {
+        const client = await db.pool.connect();
+        try {
+            // 1. Get User Points & Rank
+            // Uses a window function to calculate the user's rank across the platform based on points
+            const rankQuery = `
+                WITH RankedUsers AS (
+                    SELECT id, points, RANK() OVER(ORDER BY points DESC) as rank
+                    FROM users
+                )
+                SELECT points, rank FROM RankedUsers WHERE id = $1;
+            `;
+            const { rows: rankRows } = await client.query(rankQuery, [userId]);
+            const userStats = rankRows[0] || { points: 0, rank: 0 };
+            
+            // 2. Get Study Hours (Placeholder matching daily_goal_hours, since session tracking isn't table-bound yet)
+            const hoursQuery = `SELECT daily_goal_hours FROM users WHERE id = $1`;
+            const { rows: hoursRows } = await client.query(hoursQuery, [userId]);
+            
+            // 3. Mock "Trending Rooms" 
+            const activeRooms = [
+                { id: 'CS101', name: 'Computer Science 101', students: 12 },
+                { id: 'MATH202', name: 'Calculus Study Group', students: 8 },
+                { id: 'BIO101', name: 'Biology Midterm Prep', students: 24 }
+            ];
+
+            // 4. Friend Activity Proxy 
+            // We'll fetch recent users who share skills with this user
+            const friendsQuery = `
+                 SELECT DISTINCT u.name
+                 FROM users u
+                 JOIN user_skills us ON u.id = us.user_id
+                 WHERE us.type = 'possess' AND us.skill_id IN (
+                     SELECT skill_id FROM user_skills WHERE user_id = $1 AND type = 'wish_to_learn'
+                 ) AND u.id != $1
+                 LIMIT 3;
+            `;
+            const { rows: friendRows } = await client.query(friendsQuery, [userId]);
+            
+            const friendActivity = friendRows.map(f => ({
+                message: `Your match ${f.name} just joined a study session.`,
+                time: 'Just now'
+            }));
+
+            // Fallback activity if no matches
+            if (friendActivity.length === 0) {
+                friendActivity.push({ message: 'Welcome to StudyBuddy! Join a room to expand your network.', time: 'System' });
+            }
+
+            return {
+                stats: {
+                    points: userStats.points,
+                    rank: userStats.rank,
+                    studyHours: hoursRows[0]?.daily_goal_hours || 4 // Fallback
+                },
+                activeRooms,
+                friendActivity
+            };
+
+        } finally {
+            client.release();
+        }
     }
 };
 
