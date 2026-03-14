@@ -86,6 +86,32 @@ const User = {
         } finally {
             client.release();
         }
+    },
+
+    findMatches: async (userId) => {
+        const query = `
+            SELECT DISTINCT u.id, u.name, u.bio, u.email 
+            FROM users u
+            JOIN user_skills us ON u.id = us.user_id
+            WHERE us.type = 'possess' AND us.skill_id IN (
+                SELECT skill_id FROM user_skills WHERE user_id = $1 AND type = 'wish_to_learn'
+            ) AND u.id != $1;
+        `;
+        const { rows } = await db.query(query, [userId]);
+        
+        // Let's also fetch the skills they possess so we can show them on the UI cards
+        for (let user of rows) {
+            const skillsQuery = `
+                SELECT s.name 
+                FROM skills s
+                JOIN user_skills us ON s.id = us.skill_id
+                WHERE us.user_id = $1 AND us.type = 'possess'
+            `;
+            const { rows: skillRows } = await db.query(skillsQuery, [user.id]);
+            user.skills = skillRows.map(row => row.name);
+        }
+
+        return rows;
     }
 };
 

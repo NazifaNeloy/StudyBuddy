@@ -24,4 +24,20 @@ router.post('/:id/onboarding', authMiddleware, async (req, res) => {
   }
 });
 
+// @route   GET /users/:id/matches
+// @desc    Get recommended study partners based on skills
+router.get('/:id/matches', authMiddleware, async (req, res) => {
+  try {
+    if (req.user.id !== parseInt(req.params.id)) {
+      return res.status(403).json({ message: 'Unauthorized access' });
+    }
+
+    const matches = await User.findMatches(req.user.id);
+    res.json(matches);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error fetching matches' });
+  }
+});
+
 module.exports = router;
