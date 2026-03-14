@@ -25,11 +25,13 @@ jobs:
           cache: 'npm'
           cache-dependency-path: client/package-lock.json
 
-      - name: Install and Build 🔧
-        run: |
-          cd client
-          npm install
-          npm run build
+      - name: Install Dependencies 🔧
+        working-directory: ./client
+        run: npm install
+
+      - name: Build with Vite 🚀
+        working-directory: ./client
+        run: npm run build
 
       - name: Upload Artifact 📦
         uses: actions/upload-pages-artifact@v3
