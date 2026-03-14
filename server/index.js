@@ -42,12 +42,14 @@ app.set('io', io);
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const resourceRoutes = require('./routes/resources');
+const groupRoutes = require('./routes/groups');
 const errorHandler = require('./middleware/errorHandler');
 
 // Routes
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-app.use('/resources', resourceRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/groups', groupRoutes);
 
 // Serve the 'uploads' directory statically at /uploads
 app.use('/uploads', express.static(__dirname + '/uploads'));

@@ -92,4 +92,22 @@ router.get('/:id/dashboard', authMiddleware, async (req, res, next) => {
     }
 });
 
+// @route   PUT /users/:id/profile
+// @desc    Update user profile bio and privacy settings
+router.put('/:id/profile', authMiddleware, async (req, res, next) => {
+    try {
+        if (req.user.id !== parseInt(req.params.id)) {
+            return res.status(403).json({ message: 'Unauthorized access' });
+        }
+        
+        const { bio, isPrivate } = req.body;
+        const updatedUser = await User.updateProfile(req.user.id, bio, isPrivate);
+        
+        res.json({ message: 'Profile updated successfully', user: updatedUser });
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
+
 module.exports = router;

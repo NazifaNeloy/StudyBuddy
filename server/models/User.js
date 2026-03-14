@@ -219,6 +219,24 @@ const User = {
         } finally {
             client.release();
         }
+    },
+
+    updateProfile: async (userId, bio, isPrivate) => {
+        // Ensure the is_private column exists (programmatic migration fallback for local dev)
+        try {
+            await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS is_private BOOLEAN DEFAULT FALSE;`);
+        } catch (e) {
+            console.error("Migration check failed:", e);
+        }
+
+        const query = `
+            UPDATE users 
+            SET bio = $2, is_private = $3, updated_at = CURRENT_TIMESTAMP
+            WHERE id = $1
+            RETURNING id, name, email, bio, is_private, points, daily_goal_hours;
+        `;
+        const { rows } = await db.query(query, [userId, bio, isPrivate]);
+        return rows[0];
     }
 };
 
