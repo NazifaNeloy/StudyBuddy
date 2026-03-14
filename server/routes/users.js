@@ -40,4 +40,40 @@ router.get('/:id/matches', authMiddleware, async (req, res) => {
   }
 });
 
+// @route   GET /users/:id/notifications
+// @desc    Get all unread notifications for a user
+router.get('/:id/notifications', authMiddleware, async (req, res) => {
+    try {
+        if (req.user.id !== parseInt(req.params.id)) {
+            return res.status(403).json({ message: 'Unauthorized access' });
+        }
+        
+        const notifications = await User.getUnreadNotifications(req.user.id);
+        res.json(notifications);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching notifications' });
+    }
+});
+
+// @route   PUT /users/:id/notifications/:notifId/read
+// @desc    Mark a single notification as read
+router.put('/:id/notifications/:notifId/read', authMiddleware, async (req, res) => {
+    try {
+        if (req.user.id !== parseInt(req.params.id)) {
+            return res.status(403).json({ message: 'Unauthorized access' });
+        }
+        
+        const notification = await User.markNotificationRead(req.params.notifId, req.user.id);
+        if (!notification) {
+            return res.status(404).json({ message: 'Notification not found' });
+        }
+        
+        res.json(notification);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error marking notification read' });
+    }
+});
+
 module.exports = router;

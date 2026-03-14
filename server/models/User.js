@@ -112,6 +112,49 @@ const User = {
         }
 
         return rows;
+    },
+
+    addPoints: async (userId, amount) => {
+        const query = `
+            UPDATE users 
+            SET points = points + $2 
+            WHERE id = $1 
+            RETURNING id, name, points;
+        `;
+        const { rows } = await db.query(query, [userId, amount]);
+        return rows[0];
+    },
+
+    createNotification: async (userId, type, message) => {
+        const query = `
+            INSERT INTO notifications (user_id, type, message)
+            VALUES ($1, $2, $3)
+            RETURNING *;
+        `;
+        const { rows } = await db.query(query, [userId, type, message]);
+        return rows[0];
+    },
+
+    getUnreadNotifications: async (userId) => {
+        const query = `
+            SELECT * FROM notifications 
+            WHERE user_id = $1 AND is_read = false 
+            ORDER BY created_at DESC;
+        `;
+        const { rows } = await db.query(query, [userId]);
+        return rows;
+    },
+
+    markNotificationRead: async (notificationId, userId) => {
+        // userId check ensures users can only mark their own as read
+        const query = `
+            UPDATE notifications 
+            SET is_read = true 
+            WHERE id = $1 AND user_id = $2
+            RETURNING *;
+        `;
+        const { rows } = await db.query(query, [notificationId, userId]);
+        return rows[0];
     }
 };
 

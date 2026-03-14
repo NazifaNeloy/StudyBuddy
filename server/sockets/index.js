@@ -1,4 +1,5 @@
 const roomHandler = require('./roomHandler');
+const notificationHandler = require('./notificationHandler');
 
 module.exports = (io) => {
     io.on('connection', (socket) => {
@@ -6,6 +7,7 @@ module.exports = (io) => {
 
         // Register event handlers
         roomHandler(io, socket);
+        notificationHandler(io, socket);
 
         socket.on('disconnect', () => {
             console.log(`User disconnected: ${socket.id}`);

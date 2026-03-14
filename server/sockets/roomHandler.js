@@ -132,6 +132,31 @@ module.exports = (io, socket) => {
                 if (roomTimer.mode === 'focus') {
                     roomTimer.mode = 'break';
                     roomTimer.timeLeft = 5 * 60; // 5 min break
+                    
+                    // --- GAMIFICATION INTEGRATION ---
+                    // Award points to everyone in the room!
+                    const { activeUsers } = require('./notificationHandler');
+                    const User = require('../models/User');
+
+                    rooms[roomId].users.forEach(async (member) => {
+                        try {
+                            const updatedUser = await User.addPoints(member.id, 20);
+                            const notif = await User.createNotification(
+                                member.id,
+                                'points_earned',
+                                `Awesome focus! You earned 20 Pomodoro points. Total: ${updatedUser.points}`
+                            );
+                            
+                            // Push live alert if they are registered globally
+                            const globalSocketId = activeUsers.get(member.id);
+                            if (globalSocketId) {
+                                io.to(globalSocketId).emit('new_notification', notif);
+                            }
+                        } catch (err) {
+                            console.error('Error awarding points:', err);
+                        }
+                    });
+
                 } else {
                     roomTimer.mode = 'focus';
                     roomTimer.timeLeft = 25 * 60; // 25 min focus
