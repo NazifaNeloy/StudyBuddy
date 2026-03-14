@@ -25,9 +25,8 @@ jobs:
 
       - name: Install and Build 🚀
         run: |
-          cd client
-          npm install
-          npm run build
+          npm install --prefix client
+          npm run build --prefix client
 
       - name: Upload Artifact 📦
         uses: actions/upload-pages-artifact@v3
