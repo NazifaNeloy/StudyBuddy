@@ -22,6 +22,7 @@ import MyGroups from './pages/Authenticated/MyGroups';
 import Notifications from './pages/Authenticated/Notifications';
 import Profile from './pages/Authenticated/Profile';
 import Onboarding from './pages/Authenticated/Onboarding';
+import StudyRoom from './pages/Authenticated/StudyRoom/StudyRoom';
 
 const socket = io('http://localhost:5001');
 
@@ -61,6 +62,7 @@ function App() {
                 <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/find-friends" element={<FindFriends />} />
+                <Route path="/room/:roomId" element={<StudyRoom />} />
                 <Route path="/my-groups" element={<MyGroups />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/profile" element={<Profile />} />

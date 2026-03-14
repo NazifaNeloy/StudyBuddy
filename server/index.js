@@ -32,17 +32,14 @@ const io = new Server(server, {
   },
 });
 
+const socketHandlers = require('./sockets');
+
 app.get('/', (req, res) => {
   res.send('StudyBuddy API is running...');
 });
 
-io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
-});
+// Initialize modular socket.io handlers
+socketHandlers(io);
 
 const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
