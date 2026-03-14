@@ -27,16 +27,17 @@ Developed for the university web development curriculum, StudyBuddy addresses st
 ## 🛠 Tech Stack
 
 ### Frontend
-* **Framework:** React.js (Vite)
-* **Styling:** Tailwind CSS — *For a crisp, modern, and responsive UI/UX.*
+* **Library:** React (Vite)
+* **Styling:** Tailwind CSS (Crisp & Responsive UI/UX)
+* **State Management:** React Context API
 * **Icons:** Lucide React
 
-### Backend & Database
-* **Server:** Node.js & Express.js — *Handling custom business logic and gamification.*
-* **Database:** PostgreSQL (via **Supabase**) — *Ensuring 3NF normalization and data integrity.*
-* **Authentication:** Supabase Auth — *Secure JWT-based user management.*
-* **Real-time:** Supabase Realtime / WebSockets — *Powering the live chat and synced timers.*
-
+### Backend (The "Manual" Build)
+* **Server:** Node.js with Express.js
+* **Database:** PostgreSQL (Local/Hosted)
+* **Authentication:** JWT (JSON Web Tokens) & Bcrypt for secure hashing.
+* **Real-time:** Socket.io (Bi-directional event-based communication).
+* **File Handling:** Multer for resource uploads.
 ## 📁 Project Structure
 ```text
 StudyBuddy/
