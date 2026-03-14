@@ -16,13 +16,20 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
+      - name: Setup Node 🔧
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Install and Build 🔧
         run: |
-          npm install --prefix client
-          npm run build --prefix client
+          cd client
+          npm install
+          npm run build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: client/dist
+          token: ${{ secrets.GITHUB_TOKEN }}
