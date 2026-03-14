@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useSocket } from '../../../hooks/useSocket';
-import { Send, Play, Pause, RotateCcw, Users, LogOut, Clock, MessageSquare, Coffee } from 'lucide-react';
+import { Send, Play, Pause, RotateCcw, Users, LogOut, Clock, MessageSquare, Coffee, UploadCloud, Link as LinkIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ResourceShareModal from '../../../components/modals/ResourceShareModal';
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
@@ -12,6 +13,7 @@ function StudyRoom() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [newMessage, setNewMessage] = useState('');
+    const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Initializing our custom hook
@@ -39,6 +41,12 @@ function StudyRoom() {
         }
     };
 
+    const handleUploadSuccess = (resource) => {
+        // Broadcast the file as a system-like message but attributed to the user
+        const message = `Shared a resource: ${resource.file_url}`;
+        sendMessage(message);
+    };
+
     // Helper to format MM:SS
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -62,13 +70,22 @@ function StudyRoom() {
                         {roomUsers.length} Online
                     </div>
                 </div>
-                <button 
-                    onClick={() => navigate('/dashboard')}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-xl transition-colors"
-                >
-                    <LogOut className="w-4 h-4" />
-                    Leave Room
-                </button>
+                <div className="flex items-center gap-3">
+                    <button 
+                        onClick={() => setIsResourceModalOpen(true)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 rounded-xl transition-colors"
+                    >
+                        <UploadCloud className="w-4 h-4" />
+                        Share Resource
+                    </button>
+                    <button 
+                        onClick={() => navigate('/dashboard')}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-xl transition-colors"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        Leave Room
+                    </button>
+                </div>
             </div>
 
             {/* Main Layout */}
@@ -208,7 +225,26 @@ function StudyRoom() {
                                                     : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-bl-sm'
                                             }`}>
                                                 {!isMe && <p className="text-xs font-semibold mb-1 opacity-75">{msg.user.name}</p>}
-                                                <p className="text-sm">{msg.message}</p>
+                                                
+                                                {/* Parse for resource links */}
+                                                {msg.message.includes('Shared a resource:') ? (
+                                                    <div className="flex flex-col gap-2">
+                                                        <span className="text-sm">Shared a resource!</span>
+                                                        <a 
+                                                            href={msg.message.split('Shared a resource: ')[1]} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className={`flex items-center gap-2 text-sm px-3 py-2 rounded-lg 
+                                                                ${isMe ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-400'} 
+                                                                transition-colors`}
+                                                        >
+                                                            <LinkIcon className="w-4 h-4" /> 
+                                                            View File
+                                                        </a>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-sm">{msg.message}</p>
+                                                )}
                                             </div>
                                         </div>
                                     </motion.div>
@@ -239,6 +275,13 @@ function StudyRoom() {
                     </div>
                 </div>
             </div>
+
+            <ResourceShareModal 
+                isOpen={isResourceModalOpen}
+                onClose={() => setIsResourceModalOpen(false)}
+                roomId={roomId}
+                onUploadSuccess={handleUploadSuccess}
+            />
         </div>
     );
 }

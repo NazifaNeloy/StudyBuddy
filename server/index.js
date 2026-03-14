@@ -28,17 +28,29 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// Routes
-app.use('/auth', authRoutes);
-app.use('/users', userRoutes);
-
+// Make `io` accessible via `req.app.get('io')` in routes
+// Note: We need to pull the `socket.io` instance *up* here
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*', // In production, replace with your frontend URL
+    origin: '*', 
     methods: ['GET', 'POST'],
   },
 });
+app.set('io', io);
+
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
+const resourceRoutes = require('./routes/resources');
+const errorHandler = require('./middleware/errorHandler');
+
+// Routes
+app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
+app.use('/resources', resourceRoutes);
+
+// Serve the 'uploads' directory statically at /uploads
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 const socketHandlers = require('./sockets');
 
